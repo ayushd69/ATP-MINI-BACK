@@ -8,8 +8,20 @@ dotenv.config();
 
 const app = exp();
 const PORT = process.env.PORT || 4000;
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/empdb";
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+
+const MONGODB_URI = process.env.MONGODB_URI || (
+  process.env.NODE_ENV === "development"
+    ? "mongodb://127.0.0.1:27017/empdb"
+    : undefined
+);
+
+if (!MONGODB_URI) {
+  console.error(
+    "Missing required environment variable MONGODB_URI. Set it in Render or your deployment environment."
+  );
+  process.exit(1);
+}
 
 // add cors middleware
 app.use(
